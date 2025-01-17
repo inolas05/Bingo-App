@@ -1,16 +1,15 @@
-//import { useState } from 'react'
-import './App.css'
+import React from 'react'
+import NavBar from './components/NavBar'
+import BingoCard from './components/BingoCard'
 
-function App() {
-  
-
+const App = () => {
   return (
-    <>
-      <div className="p-6 text-center bg-blue-100">
-        {"Bingo App"}
-      </div>
-    </>
+    <div>
+      <NavBar />
+      <BingoCard />
+    </div>
   )
 }
 
 export default App
+

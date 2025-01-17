@@ -18,6 +18,10 @@ const BingoCard = () => {
      isBingoWon: false,
   });
 
+  const bingoCount = bingoState.completedRows.size
+    + bingoState.completedCols.size
+    + bingoState.completedDiagonals.size;
+
   const { completedRows, completedCols, completedDiagonals } = bingoState; // Destructure bingoState properties
 
   const generateBoard = () => {
@@ -126,8 +130,24 @@ const BingoCard = () => {
     }
   }, [selectedCells, checkForBingo, isBoardReady]); 
 
+  const resetGame = () => {
+    const center = `${Math.floor(BOARD_SIZE / 2)}-${Math.floor(BOARD_SIZE / 2)}`;
+    setSelectedCells(new Set([center]));
+  
+    setBingoState({
+      completedRows: new Set(),
+      completedCols: new Set(),
+      completedDiagonals: new Set(),
+      isBingoWon: false,
+    });
+  
+    setIsBoardReady(false);
+    generateBoard();
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 pb-1">
+    <div className="flex flex-col items-center justify-center h-screen sm:h-auto bg-gray-100 p-4 sm:pb-1">
+      <h2 className="text-xl font-bold mb-2">Bingo Count: {bingoCount}</h2>
       <div className="grid grid-cols-5 pb-1">
         {board.map((row, rowIndex) =>
           row.map((phrase, colIndex) => (
@@ -136,10 +156,17 @@ const BingoCard = () => {
               phrase={phrase}
               isSelected={selectedCells.has(`${rowIndex}-${colIndex}`)}
               onClick={() => handleCellClick(rowIndex, colIndex)}
+              dataTestId={`${rowIndex}-${colIndex}`} // pass as prop
             />
           ))
         )}
       </div>
+      <button
+        onClick={resetGame}
+        className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+      >
+        Reset Bingo
+      </button>
       {/* Animated Bingo Won Modal */}
       <BingoWonModal
         isVisible={bingoState.isBingoWon}
